@@ -123,7 +123,7 @@ def score_distribution_chart(decision_score: float) -> plt.Figure:
     fig.patch.set_alpha(0)
     ax.set_facecolor("none")
     ax.barh([0], [6], left=[-3], height=0.55, color="#1e2230", edgecolor="#2a2f3f", linewidth=0.8)
-    fill_color = "#39d98a" if decision_score >= 0 else "#f25c5c"
+    fill_color = "#208050" if decision_score >= 0 else "#f25c5c"
     ax.barh([0], [abs(decision_score)], left=[0 if decision_score >= 0 else decision_score], height=0.55, color=fill_color, alpha=0.85)
     ax.axvline(0, color="#4e5570", linewidth=1.2, linestyle="--")
     ax.scatter([decision_score], [0], color=fill_color, s=90, zorder=5, edgecolors="white", linewidths=0.8)
