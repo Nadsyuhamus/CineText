@@ -5,6 +5,9 @@ import nltk
 import seaborn as sns
 import matplotlib.pyplot as plt
 import kagglehub
+import os
+import torch
+from tqdm import tqdm
 
 from bs4 import BeautifulSoup
 from nltk.corpus import stopwords
@@ -16,7 +19,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.svm import LinearSVC
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, precision_score, recall_score, f1_score
 
 # Advanced NLP
 from transformers import pipeline
@@ -151,7 +154,7 @@ if __name__ == "__main__":
     df["label"] = df["label"].str.lower()
 
     # --- Initialize Custom Pipeline ---
-    nlp_eng = NLPPipeline()
+    nlp_eng = NLPipeline()
 
     # --- Stratified Train-Test Split ---
     # Split raw text first to preserve linguistic semantics for DistilBERT
