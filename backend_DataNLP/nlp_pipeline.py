@@ -185,7 +185,6 @@ if __name__ == "__main__":
     print(comparison_table.to_string(index=False))
 
     # --- Save Best Statistical Model Configuration ---
-    # Filter for classical estimators to export configurations locally
     classical_metrics = [m for m in metrics if m["Model"] != "DistilBERT"]
     best_classical_meta = max(classical_metrics, key=lambda x: x["F1-Score"])
     best_classical_name = best_classical_meta["Model"]
