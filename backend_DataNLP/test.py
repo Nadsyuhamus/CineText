@@ -1,6 +1,4 @@
 import joblib
-import nltk
-nltk.download('wordnet')
 vec = joblib.load("best_vectorizer.pkl")
 model = joblib.load("best_model.pkl")
 
