@@ -411,12 +411,15 @@ if app_mode == "🏠 Home & Workspace":
                 if load_classical_models()[2]:
                     model_local, vec_local, _ = load_classical_models()
                     coefs = model_local.coef_[0]
+                    THRESHOLD = 0.1
                     for tok in cleaned_tokens:
                         if tok in vec_local.vocabulary_:
                             idx = vec_local.vocabulary_[tok]
                             c = coefs[idx]
-                            if c > 0: pos_words[tok] = float(c)
-                            else: neg_words[tok] = float(abs(c))
+                            if c > THRESHOLD:
+                                pos_words[tok] = float(c)
+                            elif c < -THRESHOLD:
+                                neg_words[tok] = float(abs(c))
 
                 try:
                     from annotated_text import annotated_text
@@ -424,7 +427,10 @@ if app_mode == "🏠 Home & Workspace":
                     annotation_list = []
                     for tok in tokens:
                         clean_tok = re.sub(r"[^a-z]", "", tok.lower())
-                        lemma = _lemmatizer.lemmatize(clean_tok) if clean_tok else ""
+                        lemma = _lemmatizer.lemmatize(clean_tok)
+                        if lemma in _stop_words or len(lemma) <= 2:
+                            annotation_list.append(tok)
+                            continue
                         if lemma in pos_words: annotation_list.append((tok, "🟢", "rgba(22, 163, 74, 0.15)"))
                         elif lemma in neg_words: annotation_list.append((tok, "🔴", "rgba(185, 28, 28, 0.15)"))
                         else: annotation_list.append(tok)
