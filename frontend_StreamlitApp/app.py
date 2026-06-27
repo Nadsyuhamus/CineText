@@ -136,7 +136,7 @@ def load_sample_data():
 # CHART UTILITIES
 # ──────────────────────────────────────────────────────────────────────────────
 def decision_to_stars(score: float) -> int:
-    if   score >  1.5: return 5
+    if   score >  1.0: return 5
     elif score >  0.5: return 4
     elif score >  0.0: return 3
     elif score > -0.5: return 2
@@ -178,7 +178,7 @@ def score_distribution_chart(decision_score: float) -> plt.Figure:
     ax.set_xlim(-3, 3)
     ax.set_ylim(-0.8, 0.8)
     ax.set_yticks([])
-    ax.set_xticks([-3, -2, -1, 0, 1, 2, 3])
+    ax.set_xticks([-1, -0.5, 0, 0.5, 1])
     ax.set_xticklabels(["−3", "−2", "−1", "0", "+1", "+2", "+3"], fontsize=7.5, color="#8a91a8")
     ax.tick_params(axis="x", length=0)
     for spine in ax.spines.values(): spine.set_visible(False)
