@@ -411,7 +411,10 @@ if app_mode == "🏠 Home & Workspace":
                 if load_classical_models()[2]:
                     model_local, vec_local, _ = load_classical_models()
                     coefs = model_local.coef_[0]
-                    THRESHOLD = 0.1
+
+                    coef_abs = np.abs(coefs)
+                    THRESHOLD = np.percentile(coef_abs[coef_abs > 0], 70)
+                    
                     for tok in cleaned_tokens:
                         if tok in vec_local.vocabulary_:
                             idx = vec_local.vocabulary_[tok]
