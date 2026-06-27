@@ -34,7 +34,7 @@ class NLPipeline:
         self.lemmatizer = WordNetLemmatizer()
 
         self.bow_vectorizer = CountVectorizer(max_features=10000)
-        self.tfidf_vectorizer = TfidfVectorizer(max_features=15000, ngram_range=(1,2))
+        self.tfidf_vectorizer = TfidfVectorizer(max_features=15000, ngram_range=(1,3))
 
         self.device = 0 if torch.cuda.is_available() else (-1 if not hasattr(torch.backends, "mps") or not torch.backends.mps.is_available() else "mps")
         print(f"Assigning Deep Learning models to device target: {self.device}")
@@ -56,11 +56,14 @@ class NLPipeline:
         text = re.sub(r"\s+", " ", text).strip()
         
         # Token extraction, filtering, and structural dictionary lemma reduction
+        NEGATION_WORDS = {"not", "no", "nor", "never", "neither", "nobody", "nothing",
+                      "nowhere", "hardly", "scarcely", "barely", "without"}
+        
         words = text.split()
         cleaned_words = [
             self.lemmatizer.lemmatize(word)
             for word in words
-            if word not in self.stop_words and len(word) > 2
+            if (word not in self.stop_words or word in NEGATION_WORDS) and len(word) > 2
         ]
         return " ".join(cleaned_words)
     

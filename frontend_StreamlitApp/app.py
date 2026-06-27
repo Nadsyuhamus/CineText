@@ -69,6 +69,8 @@ for _resource, _path in [
 _stop_words = set(stopwords.words("english"))
 _lemmatizer = WordNetLemmatizer()
 
+NEGATION_WORDS = {"not", "no", "nor", "never", "neither", "nobody", "nothing",
+                  "nowhere", "hardly", "scarcely", "barely", "without"}
 
 def clean_text(text: str) -> str:
     """Exact deterministic text normalization pipeline from notebook."""
@@ -80,7 +82,7 @@ def clean_text(text: str) -> str:
     words = [
         _lemmatizer.lemmatize(w)
         for w in words
-        if w not in _stop_words and len(w) > 2
+        if (w not in _stop_words or w in NEGATION_WORDS) and len(w) > 2
     ]
     return " ".join(words)
 
@@ -414,7 +416,7 @@ if app_mode == "🏠 Home & Workspace":
 
                     coef_abs = np.abs(coefs)
                     THRESHOLD = np.percentile(coef_abs[coef_abs > 0], 70)
-                    
+
                     for tok in cleaned_tokens:
                         if tok in vec_local.vocabulary_:
                             idx = vec_local.vocabulary_[tok]
