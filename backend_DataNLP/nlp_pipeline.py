@@ -35,7 +35,7 @@ class NLPipeline:
         self.lemmatizer = WordNetLemmatizer()
 
         self.bow_vectorizer = CountVectorizer(max_features=10000)
-        self.tfidf_vectorizer = TfidfVectorizer(max_features=15000, ngram_range=(1,3))
+        self.tfidf_vectorizer = TfidfVectorizer(max_features=20000, ngram_range=(1,3))
 
         self.device = 0 if torch.cuda.is_available() else (-1 if not hasattr(torch.backends, "mps") or not torch.backends.mps.is_available() else "mps")
         print(f"Assigning Deep Learning models to device target: {self.device}")
@@ -62,10 +62,11 @@ class NLPipeline:
         
         words = text.split()
         cleaned_words = [
-            self.lemmatizer.lemmatize(word)
-            for word in words
-            if (word not in self.stop_words or word in NEGATION_WORDS) and len(word) > 2
+        self.lemmatizer.lemmatize(word)
+        for word in words
+        if (word not in self.stop_words or word in NEGATION_WORDS) and len(word) > 2
         ]
+
         return " ".join(cleaned_words)
     
     def translate_to_english(self, text: str) -> str:
@@ -195,10 +196,7 @@ if __name__ == "__main__":
     
     best_vectorizer = nlp_eng.bow_vectorizer if "BoW" in best_classical_name else nlp_eng.tfidf_vectorizer
     
-    ROOT_DIR = pathlib.Path(__file__).resolve().parent.parent  # goes up from backend_DataNLP to CineText
-MAIN_DIR = ROOT_DIR / "main"
-MAIN_DIR.mkdir(exist_ok=True)  # creates /main if it doesn't exist
-
-joblib.dump(models[best_classical_name], MAIN_DIR / "best_model.pkl")
-joblib.dump(best_vectorizer, MAIN_DIR / "best_vectorizer.pkl")
-print(f"\nExported optimal classical pipeline artifact ({best_classical_name}) to {MAIN_DIR}")
+    ROOT_DIR = pathlib.Path(__file__).resolve().parent.parent  # backend_DataNLP → CineText root
+    joblib.dump(models[best_classical_name], ROOT_DIR / "best_model.pkl")
+    joblib.dump(best_vectorizer, ROOT_DIR / "best_vectorizer.pkl")
+    print(f"\nExported optimal classical pipeline artifact ({best_classical_name}) to {ROOT_DIR}")

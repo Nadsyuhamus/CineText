@@ -20,8 +20,8 @@ from deep_translator import GoogleTranslator
 
 matplotlib.use("Agg")
 
-ROOT_DIR = pathlib.Path(__file__).resolve().parent.parent  # goes up from frontend_StreamlitApp to CineText
-MAIN_DIR = ROOT_DIR / "main"
+ROOT_DIR = pathlib.Path(__file__).resolve().parent.parent  # frontend_StreamlitApp → CineText root
+
 # ──────────────────────────────────────────────────────────────────────────────
 # SYSTEM & PAGE CONFIGURATION
 # ──────────────────────────────────────────────────────────────────────────────
@@ -59,10 +59,13 @@ st.markdown("""
 # ──────────────────────────────────────────────────────────────────────────────
 # NLTK RESOURCE SETUP
 # ──────────────────────────────────────────────────────────────────────────────
+# AFTER
 for _resource, _path in [
-    ("stopwords", "corpora/stopwords"),
-    ("wordnet",   "corpora/wordnet"),
-    ("omw-1.4",   "corpora/omw-1.4"),
+    ("stopwords",                    "corpora/stopwords"),
+    ("wordnet",                      "corpora/wordnet"),
+    ("omw-1.4",                      "corpora/omw-1.4"),
+    ("punkt_tab",                    "tokenizers/punkt_tab"),
+    ("averaged_perceptron_tagger_eng", "taggers/averaged_perceptron_tagger_eng"),
 ]:
     try:
         nltk.data.find(_path)
@@ -96,8 +99,8 @@ def clean_text(text: str) -> str:
 @st.cache_resource(show_spinner=False)
 def load_classical_models():
     try:
-        mdl = joblib.load(MAIN_DIR / "best_model.pkl")
-        vec = joblib.load(MAIN_DIR / "best_vectorizer.pkl")
+        mdl = joblib.load(ROOT_DIR / "best_model.pkl")
+        vec = joblib.load(ROOT_DIR / "best_vectorizer.pkl")
         return mdl, vec, True
     except FileNotFoundError:
         return None, None, False
@@ -286,7 +289,7 @@ app_mode = st.sidebar.radio(
 
 # Check asset presence defensively without running execution graphs
 # AFTER
-has_classical_files = (MAIN_DIR / "best_model.pkl").exists() and (MAIN_DIR / "best_vectorizer.pkl").exists()
+has_classical_files = (ROOT_DIR / "best_model.pkl").exists() and (ROOT_DIR / "best_vectorizer.pkl").exists()
 st.sidebar.markdown("---")
 st.sidebar.subheader("System Framework Status")
 st.sidebar.write(f"📁 Classical Files: {'🟢 Available' if has_classical_files else '🔴 Missing'}")
@@ -410,7 +413,7 @@ if app_mode == "🏠 Home & Workspace":
                 st.markdown("---")
                 st.subheader("🔍 Token Impact Breakdown")
                 
-                cleaned_tokens = set(cleaned.split())
+                cleaned_tokens = cleaned.split()
                 pos_words, neg_words = {}, {}
                 
                 if load_classical_models()[2]:
@@ -420,7 +423,13 @@ if app_mode == "🏠 Home & Workspace":
                     coef_abs = np.abs(coefs)
                     THRESHOLD = np.percentile(coef_abs[coef_abs > 0], 70)
 
-                    for tok in cleaned_tokens:
+                    cleaned_token_list = cleaned.split()
+                    pos_tags = dict(nltk.pos_tag(cleaned_token_list))
+                    ALLOWED_TAGS = {"JJ", "JJR", "JJS", "RB", "RBR", "RBS"}  # adjectives + adverbs
+
+                    for tok in cleaned_token_list:
+                        if pos_tags.get(tok, "") not in ALLOWED_TAGS:
+                            continue
                         if tok in vec_local.vocabulary_:
                             idx = vec_local.vocabulary_[tok]
                             c = coefs[idx]
