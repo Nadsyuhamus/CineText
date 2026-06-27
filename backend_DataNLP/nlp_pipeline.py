@@ -8,6 +8,7 @@ import kagglehub
 import os
 import torch
 from tqdm import tqdm
+import pathlib
 
 from bs4 import BeautifulSoup
 from nltk.corpus import stopwords
@@ -194,6 +195,10 @@ if __name__ == "__main__":
     
     best_vectorizer = nlp_eng.bow_vectorizer if "BoW" in best_classical_name else nlp_eng.tfidf_vectorizer
     
-    joblib.dump(models[best_classical_name], "best_model.pkl")
-    joblib.dump(best_vectorizer, "best_vectorizer.pkl")
-    print(f"\nExported optimal classical pipeline artifact ({best_classical_name}) to system paths.")
+    ROOT_DIR = pathlib.Path(__file__).resolve().parent.parent  # goes up from backend_DataNLP to CineText
+MAIN_DIR = ROOT_DIR / "main"
+MAIN_DIR.mkdir(exist_ok=True)  # creates /main if it doesn't exist
+
+joblib.dump(models[best_classical_name], MAIN_DIR / "best_model.pkl")
+joblib.dump(best_vectorizer, MAIN_DIR / "best_vectorizer.pkl")
+print(f"\nExported optimal classical pipeline artifact ({best_classical_name}) to {MAIN_DIR}")

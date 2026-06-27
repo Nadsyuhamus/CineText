@@ -2,6 +2,7 @@ import os
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 import re
+import pathlib
 import time
 import joblib
 import matplotlib
@@ -19,6 +20,8 @@ from deep_translator import GoogleTranslator
 
 matplotlib.use("Agg")
 
+ROOT_DIR = pathlib.Path(__file__).resolve().parent.parent  # goes up from frontend_StreamlitApp to CineText
+MAIN_DIR = ROOT_DIR / "main"
 # ──────────────────────────────────────────────────────────────────────────────
 # SYSTEM & PAGE CONFIGURATION
 # ──────────────────────────────────────────────────────────────────────────────
@@ -92,10 +95,9 @@ def clean_text(text: str) -> str:
 # ──────────────────────────────────────────────────────────────────────────────
 @st.cache_resource(show_spinner=False)
 def load_classical_models():
-    """Loads saved classical pipeline components safely when called."""
     try:
-        mdl = joblib.load("best_model.pkl")
-        vec = joblib.load("best_vectorizer.pkl")
+        mdl = joblib.load(MAIN_DIR / "best_model.pkl")
+        vec = joblib.load(MAIN_DIR / "best_vectorizer.pkl")
         return mdl, vec, True
     except FileNotFoundError:
         return None, None, False
@@ -283,7 +285,8 @@ app_mode = st.sidebar.radio(
 )
 
 # Check asset presence defensively without running execution graphs
-has_classical_files = os.path.exists("best_model.pkl") and os.path.exists("best_vectorizer.pkl")
+# AFTER
+has_classical_files = (MAIN_DIR / "best_model.pkl").exists() and (MAIN_DIR / "best_vectorizer.pkl").exists()
 st.sidebar.markdown("---")
 st.sidebar.subheader("System Framework Status")
 st.sidebar.write(f"📁 Classical Files: {'🟢 Available' if has_classical_files else '🔴 Missing'}")
