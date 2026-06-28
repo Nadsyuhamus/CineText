@@ -1,6 +1,6 @@
 [theme]
-primaryColor = "#b91c1c"          # Theater Curtain Crimson
-backgroundColor = "#fff1f2"       # Soft Rose-Cream tint (giving a stylized, colored backdrop)
-secondaryBackgroundColor = "#ffe4e6" # Deeper velvet rose for structural containers and sidebars
-textColor = "#0f172a"             # Midnight Slate for highly readable text
+primaryColor = "#fdbb13"          # Brighter Deep Marquee Gold
+backgroundColor = "#160a11"       # Deep Cinematic Theater Shadow
+secondaryBackgroundColor = "#4c111a" # Rich Velvet Red Theater Seat Burgundy
+textColor = "#fef3c7"             # High-Contrast Popcorn Warm Cream Text
 font = "sans serif"
