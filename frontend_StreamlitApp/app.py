@@ -387,13 +387,6 @@ live_accuracies = {
     "⭐ TF-IDF Vectorizer + LinearSVC":        0.9000,
 }
 
-live_stats = {
-    "Accuracy":  0.9000,
-    "Precision": 0.9000,
-    "Recall":    0.9000,
-    "F1-Score":  0.9000,
-}
-
 has_classical_files = (ROOT_DIR / "best_model.pkl").exists() and (ROOT_DIR / "best_vectorizer.pkl").exists()
 st.sidebar.markdown("---")
 st.sidebar.subheader("System Framework Status")
@@ -629,7 +622,7 @@ elif app_mode == "📂 Data Explorer":
 # ──────────────────────────────────────────────────────────────────────────────
 elif app_mode == "📈 Model Visualizations":
     st.title("📈 Model Evaluation Performance & Visualizations Matrix")
-    st.caption("🔒 **Data Scope:** All graphs below are dynamically computed using unseen testing splits exclusively.")
+    st.caption("🔒 **Data Scope:** All graphs reflect evaluation results computed on the held-out 20% unseen test split (10,000 samples).")
     st.markdown("---")
     
     v_row1_col1, v_row1_col2 = st.columns(2)
@@ -712,9 +705,11 @@ elif app_mode == "🧠 Pipeline Info & Team":
         st.markdown("""
         * HTML Tag stripping via **BeautifulSoup**
         * Case normalization & non-alphabetic character cleanup
-        * Stopword filtering using NLTK English standard lists
-        * Token reduction via **WordNetLemmatizer**
+        * Stopword filtering using NLTK English standard lists — negation words (`not`, `never`, `hardly` etc.) explicitly preserved
+        * Short token filtering — tokens with fewer than 3 characters removed
+        * Word reduction via **WordNetLemmatizer**
         """)
+        
     with col_p2:
         st.subheader("Advanced Transformer Parameters")
         st.markdown("""
