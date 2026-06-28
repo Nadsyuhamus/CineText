@@ -331,7 +331,7 @@ def global_confusion_matrix(cm_array) -> plt.Figure:
         cm_array, annot=True, fmt="d", cmap="YlOrRd", 
         xticklabels=["Negative", "Positive"], yticklabels=["Negative", "Positive"],
         ax=ax, linewidths=1.5, linecolor="#4c111a",
-        annot_kws={"size": 12, "weight": "bold", "color": "#160a11"},
+        annot_kws={"size": 12, "weight": "bold"},
         cbar=False
     )
     ax.set_xlabel("Predicted Label", color="#fef3c7", fontsize=9.5, fontweight="bold")
@@ -627,7 +627,7 @@ elif app_mode == "📈 Model Visualizations":
     
     v_row1_col1, v_row1_col2 = st.columns(2)
     with v_row1_col1:
-        st.subheader("1. System Benchmark Matrix (Testing Accuracy)")
+        st.subheader("System Benchmark Matrix")
         st.pyplot(global_accuracy_chart(live_accuracies), use_container_width=True)
         st.markdown("""
         <div class="insight-box">
@@ -636,7 +636,7 @@ elif app_mode == "📈 Model Visualizations":
         """, unsafe_allow_html=True)
         
     with v_row1_col2:
-        st.subheader("2. Testing Confusion Matrix")
+        st.subheader("Testing Confusion Matrix")
         st.pyplot(global_confusion_matrix(live_cm), use_container_width=True)
         st.markdown("""
         <div class="insight-box">
@@ -647,7 +647,7 @@ elif app_mode == "📈 Model Visualizations":
     st.markdown("---")
     v_row2_col1, v_row2_col2 = st.columns(2)
     with v_row2_col1:
-        st.subheader("3. Global Structural Feature Importance Weights")
+        st.subheader("Global Structural Feature Importance Weights")
         if classical_loaded:
             st.pyplot(global_top20_chart(model, vectorizer), use_container_width=True)
         else:
@@ -659,7 +659,7 @@ elif app_mode == "📈 Model Visualizations":
         """, unsafe_allow_html=True)
         
     with v_row2_col2:
-        st.subheader("4. Global Vocabulary Word Cloud Analysis")
+        st.subheader("Global Vocabulary Word Cloud Analysis")
         if classical_loaded:
             st.pyplot(global_wordcloud(model, vectorizer), use_container_width=True)
         else:
