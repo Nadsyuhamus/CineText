@@ -676,6 +676,7 @@ elif app_mode == "📈 Model Visualizations":
 elif app_mode == "🧠 Pipeline Info & Team":
     st.title("🧠 System Architecture & Execution Pipeline Details")
     st.markdown("---")
+    st.subheader("Comparative Evaluation Metrics Summary Table")
     
     results_df = pd.DataFrame({
         "System Variant Architecture Selection": [
@@ -709,7 +710,7 @@ elif app_mode == "🧠 Pipeline Info & Team":
         * Short token filtering — tokens with fewer than 3 characters removed
         * Word reduction via **WordNetLemmatizer**
         """)
-        
+
     with col_p2:
         st.subheader("Advanced Transformer Parameters")
         st.markdown("""
